@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="10.3.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Carsales.Core\Carsales.Core.csproj" />
+    <ProjectReference Include="..\Carsales.Models\Carsales.Models.csproj" />
+    <ProjectReference Include="..\Carsales.Repositories\Carsales.Repositories.csproj" />
+    <ProjectReference Include="..\Carsales.ViewModels\Carsales.ViewModels.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,4 @@
+﻿dotnet test --collect:"XPlat Code Coverage"
+
+reportgenerator -reports:"TestResults\**\coverage.cobertura.xml" -targetdir:"coveragereport" -reporttypes:Html
+Note: Run command to install reportgenerator "dotnet tool install -g dotnet-reportgenerator-globaltool"
