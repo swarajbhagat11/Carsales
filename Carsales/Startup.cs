@@ -29,6 +29,7 @@ namespace Carsales
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Carsales", Version = "v1" });
             });
+            // services.AddCors();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
@@ -58,6 +59,8 @@ namespace Carsales
             {
                 endpoints.MapControllers();
             });
+
+            // app.UseCors(builder => builder.WithOrigins("https://localhost:4535"));
         }
     }
 }
