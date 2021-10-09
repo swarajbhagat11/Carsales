@@ -1,9 +1,12 @@
-﻿using Carsales.Core;
+﻿using Autofac.Features.Indexed;
+using Carsales.Core;
+using Carsales.Core.ChainOfResponsibility;
 using Carsales.Core.HelperObjects;
 using Carsales.Core.Mappers;
 using Carsales.Models;
 using Carsales.Models.Validators;
 using Carsales.Repositories.Interfaces;
+using Carsales.ResponsibilityHandlers.CarHandlers;
 using Carsales.Services.Interfaces;
 using Carsales.ViewModels;
 using FluentValidation.Results;
@@ -20,25 +23,33 @@ namespace Carsales.Services
     {
         private readonly ILogger<CarService> _logger;
         private readonly IGenericRepository<CarDTO> _carRepo;
+        private readonly IIndex<String, IChainHandler> _handlerObj;
 
-        public CarService(ILogger<CarService> logger, IGenericRepository<CarDTO> carRepo)
+        public CarService(ILogger<CarService> logger, IGenericRepository<CarDTO> carRepo, IIndex<String, IChainHandler> handlerObj)
         {
             _logger = logger;
             _carRepo = carRepo;
+            _handlerObj = handlerObj;
         }
 
         public ServiceResponse AddVehicle(JObject car)
         {
-            CarDTO carObj = ModelMapper.mapObjects<CarDTO>(car.ToObject<Car>());
-            _logger.LogInformation("AddVehicle mapping completed to CarDTO.");
-            var validator = new CarValidator();
-            ValidationResult results = validator.Validate(carObj);
-            _logger.LogInformation("AddVehicle CarDTO model validated.", results);
+            // Create object of responsibility handler
+            var carMapping = _handlerObj["carMapping"];
+            var carValidator = _handlerObj["carValidator"];
 
-            if (!results.IsValid)
+            // set sequence of responsibility handler
+            carMapping.setNext(carValidator);
+
+            // called first responsibility handler handle and return HandlerResponse object from carValidator (last) handler 
+            HandlerResponse handleRes = (HandlerResponse)carMapping.handle(car);
+
+            CarDTO carObj = (CarDTO)handleRes.dtoObj;
+
+            if (!handleRes.validation.IsValid)
             {
                 _logger.LogInformation("AddVehicle CarDTO model is not valid.");
-                return new ServiceResponse { hasSuccess = false, errors = results.Errors.Select(x => x.ErrorMessage).ToList() };
+                return new ServiceResponse { hasSuccess = false, errors = handleRes.validation.Errors.Select(x => x.ErrorMessage).ToList() };
             }
 
             IEnumerable<CarDTO> existingCars = _carRepo.Find(x => x.email == carObj.email && x.year == carObj.year && x.make == carObj.make && x.model == carObj.model);

@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="6.3.0" />
     <PackageReference Include="FluentValidation" Version="10.3.3" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
@@ -13,6 +14,7 @@
     <ProjectReference Include="..\Carsales.Core\Carsales.Core.csproj" />
     <ProjectReference Include="..\Carsales.Models\Carsales.Models.csproj" />
     <ProjectReference Include="..\Carsales.Repositories\Carsales.Repositories.csproj" />
+    <ProjectReference Include="..\Carsales.ResponsibilityHandlers\Carsales.ResponsibilityHandlers.csproj" />
     <ProjectReference Include="..\Carsales.ViewModels\Carsales.ViewModels.csproj" />
   </ItemGroup>
 

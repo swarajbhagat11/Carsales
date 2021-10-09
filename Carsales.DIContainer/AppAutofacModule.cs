@@ -1,7 +1,9 @@
 ﻿using Autofac;
+using Carsales.Core.ChainOfResponsibility;
 using Carsales.Models;
 using Carsales.Repositories;
 using Carsales.Repositories.Interfaces;
+using Carsales.ResponsibilityHandlers.CarHandlers;
 using Carsales.Services;
 using Carsales.Services.Interfaces;
 
@@ -12,6 +14,8 @@ namespace Carsales.DIContainer
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<CarService>().Named<IVehicleService>("car");
+            builder.RegisterType<CarMappingHandler>().Named<IChainHandler>("carMapping");
+            builder.RegisterType<CarValidatorHandler>().Named<IChainHandler>("carValidator");
             builder.RegisterType<GenericRepository<CarDTO>>().As<IGenericRepository<CarDTO>>();
 
             // // Other Lifetime
